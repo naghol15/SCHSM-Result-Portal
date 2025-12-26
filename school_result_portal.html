@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>South City High School Result Portal</title>
+<style>
+body {font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 0; display: flex; justify-content: center;}
+.container {max-width: 600px; width: 100%; padding: 20px;}
+.header {text-align: center; margin-bottom: 20px;}
+.header img {max-width: 120px; margin-bottom: 10px;}
+.header h1 {margin: 0; font-size: 24px;}
+.search-box {text-align: center; margin-bottom: 20px;}
+input[type=text] {padding: 10px; width: 70%; font-size: 16px;}
+button {padding: 10px 20px; font-size: 16px; cursor: pointer;}
+.result-card {background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: none;}
+.result-card table {width: 100%; border-collapse: collapse; margin-top: 10px;}
+.result-card table, th, td {border: 1px solid #ccc;}
+th, td {padding: 8px; text-align: center;}
+.total {font-weight: bold;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<img src="A_screenshot_of_an_online_student_result_portal_fo.png" alt="School Logo">
+<h1>South City High School - Result Portal</h1>
+</div>
+<div class="search-box">
+<input type="text" id="rollNo" placeholder="Enter Roll No">
+<button onclick="checkResult()">Check Result</button>
+</div>
+<div class="result-card" id="resultCard">
+<p><strong>Student Name:</strong> <span id="studentName"></span></p>
+<p><strong>Father Name:</strong> <span id="fatherName"></span></p>
+<p><strong>Class:</strong> <span id="className"></span></p>
+<p><strong>Roll No:</strong> <span id="rollNumber"></span></p>
+<table>
+<thead><tr><th>Subject</th><th>Marks</th></tr></thead>
+<tbody id="subjectMarks"></tbody>
+</table>
+<p class="total">Obtained Marks: <span id="obtainedMarks"></span> / Total Marks: <span id="totalMarks"></span></p>
+<p class="total">Percentage: <span id="percentage"></span>% | Grade: <span id="grade"></span></p>
+</div>
+</div>
+<script>
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTMewOykbi7NafELm7V1VS5cthNBI4Rq4UwH9nXzRFQmYA5RZB1gzqlkCMPJ0SgtzFWqT3Gy8gqMKPv/pub?output=csv';
+let students = [];
+
+fetch(csvUrl)
+.then(response => response.text())
+.then(data => {
+    const rows = data.split('\n').slice(1);
+    rows.forEach(row => {
+        const cols = row.split(',');
+        if(cols.length > 5){
+            students.push({
+                roll: cols[4].trim(),
+                name: cols[1].trim(),
+                father: cols[2].trim(),
+                class: cols[3].trim(),
+                subjects: {
+                    'English': parseInt(cols[7]),
+                    'Mathematics': parseInt(cols[10]),
+                    'Sindhi': parseInt(cols[13])
+                }
+            });
+        }
+    });
+});
+
+function checkResult(){
+    const rollInput = document.getElementById('rollNo').value.trim();
+    const student = students.find(s => s.roll === rollInput);
+    const resultCard = document.getElementById('resultCard');
+    if(student){
+        document.getElementById('studentName').textContent = student.name;
+        document.getElementById('fatherName').textContent = student.father;
+        document.getElementById('className').textContent = student.class;
+        document.getElementById('rollNumber').textContent = student.roll;
+        let tbody = document.getElementById('subjectMarks');
+        tbody.innerHTML = '';
+        let total = 0;
+        let totalSubjects = 0;
+        for(const sub in student.subjects){
+            const mark = student.subjects[sub];
+            tbody.innerHTML += `<tr><td>${sub}</td><td>${mark}</td></tr>`;
+            total += mark;
+            totalSubjects++;
+        }
+        document.getElementById('obtainedMarks').textContent = total;
+        document.getElementById('totalMarks').textContent = totalSubjects*100;
+        const percentage = ((total/(totalSubjects*100))*100).toFixed(2);
+        document.getElementById('percentage').textContent = percentage;
+        let grade = '';
+        if(percentage>=80) grade='A1';
+        else if(percentage>=70) grade='A';
+        else if(percentage>=60) grade='B';
+        else if(percentage>=50) grade='C';
+        else if(percentage>=40) grade='D';
+        else grade='FAIL';
+        document.getElementById('grade').textContent = grade;
+        resultCard.style.display = 'block';
+    } else {
+        alert('Roll No not found');
+        resultCard.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>
