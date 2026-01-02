@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-bottom: 3px solid #0b5ed7;
+}
+
+.header img {
+    width: 110px;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    font-size: 22px;
+    margin: 0;
+    color: #000;
+}
+
+/* MAIN BOX */
+.container {
+    max-width: 600px;
+    background: white;
+    margin: 30px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #0b5ed7;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #084298;
+}
+
+/* RESULT AREA */
+#result {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* MARKSHEET TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: 1px solid #000;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background: #e9ecef;
+}
